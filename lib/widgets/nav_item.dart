@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class NavItem extends StatefulWidget {
   final String label;
@@ -27,12 +26,12 @@ class _NavItemState extends State<NavItem> {
       onExit: (_) => setState(() => _hovering = false),
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 200),
-        style: TextStyle(
-          color: _hovering ? hoverColor : Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          fontFamily: GoogleFonts.pressStart2p().fontFamily,
-        ),
+        style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+              fontSize: 12,
+              letterSpacing: -1,
+              height: 1.2,
+              color: _hovering ? hoverColor : Colors.white,
+            ),
         child: Row(
           children: [
             Icon(

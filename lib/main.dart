@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_bloc.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_event.dart';
 import 'package:pixelmonworldsweb/pages/landing_screen.dart';
@@ -32,12 +31,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pixelmon Worlds',
         routerConfig: router,
-        theme: ThemeData.dark().copyWith(
+        theme: ThemeData(
+          brightness: Brightness.dark,
           scaffoldBackgroundColor: Colors.black,
           primaryColor: Colors.red,
-          textTheme: GoogleFonts.pressStart2pTextTheme(
-            ThemeData.dark().textTheme,
-          ),
+          fontFamily: 'PressStart2P',
         ),
       ),
     );
