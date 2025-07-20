@@ -63,7 +63,10 @@ class _PokemonCardState extends State<PokemonCard> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            gradient: const LinearGradient(colors: [Colors.black, Colors.red]),
+            gradient: const LinearGradient(
+                colors: [Colors.black, Colors.red],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight),
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withOpacity(0.3),
@@ -191,7 +194,10 @@ class _PokemonCardState extends State<PokemonCard> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        gradient: const LinearGradient(colors: [Colors.red, Colors.black]),
+        gradient: const LinearGradient(
+            colors: [Colors.black, Colors.red],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withOpacity(0.3),
