@@ -20,7 +20,7 @@ class DynmapPage extends StatelessWidget {
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(viewId, (int viewId) {
       return html.IFrameElement()
-        ..src = 'http://localhost:8123/'
+        ..src = 'http://localhost:8123/?worldname=world&mapname=surface'
         ..style.border = 'none'
         ..style.width = '100%'
         ..style.height = '100%';

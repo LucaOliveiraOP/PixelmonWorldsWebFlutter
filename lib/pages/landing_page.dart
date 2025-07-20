@@ -23,7 +23,7 @@ class LandingPage extends StatelessWidget {
       children: const [
         _HeroTexts(),
         SizedBox(height: 32),
-        ServerStatusWidget(online: false, players: 153),
+        ServerStatusWidget(online: true, players: 153),
         SizedBox(height: 32),
         _HeroButtons(),
         SizedBox(height: 24),

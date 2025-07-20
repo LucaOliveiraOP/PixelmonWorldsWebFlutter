@@ -16,7 +16,7 @@ class ServerStatusWidget extends StatelessWidget {
     final color =
         online ? Colors.green.withOpacity(0.7) : Colors.red.withOpacity(0.7);
     final text = online
-        ? 'Servidor está online: $players jogadores'
+        ? ' $players jogadores Online nesse momento :)'
         : 'Servidor está offline';
 
     return Row(
