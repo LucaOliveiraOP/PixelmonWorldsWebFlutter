@@ -33,29 +33,11 @@ class LandingScreen extends StatelessWidget {
                     child: Container(color: Colors.black.withOpacity(0.7))),
                 Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 24),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.catching_pokemon,
-                              color: Colors.red, size: 36),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: const LandingPageNavBar(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
                         return LandingPage(authState: state);
                       },
                     ),
-                    const LandingPageFooter(),
                   ],
                 ),
               ],
