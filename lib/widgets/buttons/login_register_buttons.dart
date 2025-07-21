@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_bloc.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_event.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_state.dart';
@@ -13,6 +14,8 @@ class LoginRegisterButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentRoute = GoRouter.of(context).location;
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthSuccess) {
@@ -44,10 +47,20 @@ class LoginRegisterButtons extends StatelessWidget {
               label: 'Entrar',
               filled: true,
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const LoginDialog(),
-                );
+                if (currentRoute == "/mapa") {
+                  context.go('/');
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const LoginDialog(),
+                    );
+                  });
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const LoginDialog(),
+                  );
+                }
               },
             ),
             const SizedBox(width: 16),
@@ -55,10 +68,20 @@ class LoginRegisterButtons extends StatelessWidget {
               label: 'Registrar',
               filled: false,
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const RegisterDialog(),
-                );
+                if (currentRoute == "/mapa") {
+                  context.go('/');
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const RegisterDialog(),
+                    );
+                  });
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const RegisterDialog(),
+                  );
+                }
               },
             ),
           ],
