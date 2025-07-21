@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class NavItem extends StatefulWidget {
   final String label;
   final IconData icon;
+  final bool selected;
   final VoidCallback? ontap;
 
   const NavItem({
     super.key,
     required this.label,
     required this.icon,
+    required this.selected,
     this.ontap,
   });
 
@@ -21,7 +23,12 @@ class _NavItemState extends State<NavItem> {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = Colors.white;
     final hoverColor = Colors.red[700]!;
+    final selectedColor = Colors.redAccent;
+
+    final color =
+        widget.selected ? selectedColor : (_hovering ? hoverColor : baseColor);
 
     return GestureDetector(
       onTap: widget.ontap,
@@ -30,22 +37,23 @@ class _NavItemState extends State<NavItem> {
         onExit: (_) => setState(() => _hovering = false),
         child: AnimatedDefaultTextStyle(
           duration: const Duration(milliseconds: 200),
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                fontSize: 12,
-                letterSpacing: -1,
-                height: 1.2,
-                color: _hovering ? hoverColor : Colors.white,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 10,
+                letterSpacing: 0,
+                color: color,
+                fontWeight:
+                    widget.selected ? FontWeight.bold : FontWeight.normal,
               ),
           child: Row(
             children: [
               Icon(
                 widget.icon,
-                color: _hovering ? hoverColor : Colors.white,
+                color: color,
                 size: 18,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
               Text(widget.label),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
             ],
           ),
         ),

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,11 +13,15 @@ class PlayerHead extends StatefulWidget {
 }
 
 class _PlayerHeadState extends State<PlayerHead> {
+  // Nomes permitidos
+  final List<String> fallbackNames = ['Steve', 'Notch', 'Herobrine'];
   String displayedName = 'Steve';
 
   @override
   void initState() {
     super.initState();
+    // Sorteia um nome da lista para exibir enquanto carrega ou se falhar
+    displayedName = (fallbackNames..shuffle()).first;
     _resolveUsername(widget.username);
   }
 
@@ -30,7 +36,9 @@ class _PlayerHeadState extends State<PlayerHead> {
           displayedName = validName;
         });
       }
-    } catch (_) {}
+    } catch (_) {
+      // Em caso de erro, o nome sorteado permanece
+    }
   }
 
   @override
