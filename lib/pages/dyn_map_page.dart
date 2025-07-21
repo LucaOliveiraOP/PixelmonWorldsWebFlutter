@@ -26,16 +26,6 @@ class DynmapPage extends StatelessWidget {
         ..style.height = '100%';
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mapa do Servidor'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          tooltip: 'Voltar',
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: const HtmlElementView(viewType: viewId),
-    );
+    return const HtmlElementView(viewType: viewId);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_state.dart';
 import 'package:pixelmonworldsweb/pages/dashboard_page.dart';
 import 'package:pixelmonworldsweb/widgets/buttons/animated_button.dart';
@@ -12,23 +13,42 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (authState is AuthSuccess) {
-      // Mostra dashboard se logado
-      return DashboardContent(playerData: authState.playerData);
-    }
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    // Caso não logado, mostra conteúdo normal da landing page
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        _HeroTexts(),
-        SizedBox(height: 32),
-        ServerStatusWidget(online: true, players: 153),
-        SizedBox(height: 32),
-        _HeroButtons(),
-        SizedBox(height: 24),
-        _SectionsList(),
-      ],
+    return SizedBox(
+      height: screenHeight,
+      width: screenWidth,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/pixelmonfoto.png',
+            fit: BoxFit.cover,
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.6),
+          ),
+          SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: screenHeight,
+              ),
+              child: Column(
+                children: const [
+                  _HeroTexts(),
+                  SizedBox(height: 32),
+                  ServerStatusWidget(online: true, players: 153),
+                  SizedBox(height: 32),
+                  _HeroButtons(),
+                  SizedBox(height: 24),
+                  _SectionsList(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -40,6 +60,7 @@ class _HeroTexts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 64),
         Text(
           'Bem-vindo ao Pixelmon Worlds!',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -95,37 +116,6 @@ class _SectionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sections = const [
-      SectionContainer(
-        title: 'Servidor Dedicado',
-        content:
-            'Infraestrutura robusta com capacidade para 500 jogadores simultâneos!',
-        icon: Icons.dns,
-      ),
-      SectionContainer(
-        title: 'Sobre Nós',
-        content: 'Somos uma comunidade apaixonada por Pixelmon desde 2014.',
-        icon: Icons.info_outline,
-      ),
-      SectionContainer(
-        title: 'Vote no Servidor',
-        content: 'Apoie nosso servidor votando e ganhe recompensas especiais!',
-        icon: Icons.how_to_vote,
-      ),
-      SectionContainer(
-        title: 'Loja Oficial',
-        content:
-            'Adquira itens exclusivos, ranks VIP e muito mais em nossa loja online.',
-        icon: Icons.storefront,
-      ),
-      SectionContainer(
-        title: 'Nosso Discord',
-        content:
-            'Junte-se à nossa comunidade e fique por dentro das novidades!',
-        icon: Icons.chat_bubble_outline,
-      ),
-    ];
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Center(
@@ -133,7 +123,43 @@ class _SectionsList extends StatelessWidget {
           spacing: 16,
           runSpacing: 16,
           alignment: WrapAlignment.center,
-          children: sections,
+          children: [
+            const SectionContainer(
+              title: 'Servidor Dedicado',
+              content:
+                  'Infraestrutura robusta com capacidade para 500 jogadores simultâneos!',
+              icon: Icons.dns,
+            ),
+            SectionContainer(
+              title: 'Mapa dos Mundos',
+              content: 'Saiba exatamente onde está e onde explorar!',
+              icon: Icons.travel_explore,
+              onTap: () {
+                context.go('/mapa');
+              },
+            ),
+            const SectionContainer(
+              title: 'Vote no Servidor',
+              content:
+                  'Apoie nosso servidor votando e ganhe recompensas especiais!',
+              icon: Icons.how_to_vote,
+            ),
+            SectionContainer(
+              title: 'Loja Oficial',
+              content:
+                  'Adquira itens exclusivos, ranks VIP e muito mais em nossa loja online.',
+              icon: Icons.storefront,
+              onTap: () {
+                context.go('/loja');
+              },
+            ),
+            const SectionContainer(
+              title: 'Nossas Redes Sociais',
+              content:
+                  'Junte-se às nossas comunidades e fique por dentro das novidades!',
+              icon: Icons.chat_bubble_outline,
+            ),
+          ],
         ),
       ),
     );
