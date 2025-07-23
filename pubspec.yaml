@@ -12,8 +12,7 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_bloc: ^8.1.5
   http: ^1.1.0
-  go_router: ^13.0.0
-  flip_card: ^0.6.0
+  go_router: ^6.0.0
   shared_preferences: ^2.2.2
 
 dev_dependencies:
@@ -23,6 +22,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/pixelmonfoto.png
 
   fonts:
     - family: PressStart2P
