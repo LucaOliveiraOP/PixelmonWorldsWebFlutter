@@ -1,135 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pixelmonworldsweb/blocs/storebloc/store_bloc.dart';
+import 'package:pixelmonworldsweb/blocs/storebloc/store_event.dart';
+import 'package:pixelmonworldsweb/blocs/storebloc/store_state.dart';
+import 'package:pixelmonworldsweb/models/store_item.dart';
+import 'package:pixelmonworldsweb/widgets/store_drawer.dart';
+import 'package:pixelmonworldsweb/widgets/buttons/cart_button.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({super.key});
 
-  final List<StoreItem> items = const [
-    StoreItem(
-      name: 'Rank VIP',
-      description: 'Tenha benefícios exclusivos e destaque no servidor.',
-      price: 29.99,
-      icon: Icons.star,
-    ),
-    StoreItem(
-      name: 'Pacote de Pokébolas',
-      description: '50 Pokébolas para ajudar na sua captura.',
-      price: 9.99,
-      icon: Icons.sports_baseball,
-    ),
-    StoreItem(
-      name: 'MTs Especiais',
-      description: 'Movimentos técnicos raros para seus Pokémon.',
-      price: 14.99,
-      icon: Icons.flash_on,
-    ),
-    StoreItem(
-      name: 'Skins Exclusivas',
-      description: 'Customize sua experiência com skins únicas.',
-      price: 19.99,
-      icon: Icons.palette,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Loja Oficial'),
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: ListView.separated(
-          itemCount: items.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final item = items[index];
-            return _StoreItemCard(item: item);
-          },
-        ),
+      backgroundColor: const Color(0xFF0D0D0D),
+      body: Row(
+        children: [
+          SizedBox(
+            width: 260,
+            child: BlocBuilder<StoreBloc, StoreState>(
+              builder: (context, state) {
+                return StoreDrawer(
+                  selectedType: state.selectedFilter,
+                  onFilterSelected: (type) {
+                    context.read<StoreBloc>().add(SelectFilter(type));
+                  },
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: BlocBuilder<StoreBloc, StoreState>(
+                builder: (context, state) {
+                  final filteredItems = state.filteredItems;
+                  return GridView.builder(
+                    itemCount: filteredItems.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.10,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
+                      return _StoreItemCard(
+                        item: item,
+                        onAddToCart: (item) {
+                          context.read<StoreBloc>().add(AddToCart(item));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('${item.name} adicionado ao carrinho!'),
+                            ),
+                          );
+                        },
+                        onBuy: (item) {
+                          context.read<StoreBloc>().add(AddToCart(item));
+                          showCartDrawer(context);
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class StoreItem {
-  final String name;
-  final String description;
-  final double price;
-  final IconData icon;
-
-  const StoreItem({
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.icon,
-  });
-}
+// ---------------------------------------------
+// WIDGETS AUXILIARES (mantidos iguais ao seu código original)
+// ---------------------------------------------
 
 class _StoreItemCard extends StatelessWidget {
   final StoreItem item;
+  final void Function(StoreItem) onAddToCart;
+  final void Function(StoreItem) onBuy;
 
-  const _StoreItemCard({required this.item});
+  const _StoreItemCard({
+    required this.item,
+    required this.onAddToCart,
+    required this.onBuy,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey[900],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: const Color(0xFF1C1C1C),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        child: Row(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            Icon(item.icon, size: 48, color: Colors.deepPurpleAccent),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    item.description,
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
-                  ),
-                ],
+            Expanded(child: Image.asset(item.image, fit: BoxFit.contain)),
+            Text(
+              item.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'R\$ ${item.price.toStringAsFixed(2)}',
+              style: const TextStyle(
+                color: Colors.greenAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
-            const SizedBox(width: 12),
-            Column(
+            const SizedBox(height: 6),
+            Row(
               children: [
-                Text(
-                  'R\$ ${item.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: Colors.greenAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.green.shade600,
+                        Colors.greenAccent.shade700
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurpleAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () => onBuy(item),
+                    label: const Text(
+                      'Comprar',
+                      style: TextStyle(fontSize: 12),
                     ),
                   ),
-                  onPressed: () {
-                    // Aqui você pode colocar a lógica de compra
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Compra do ${item.name} realizada!')),
-                    );
-                  },
-                  child: const Text('Comprar'),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.greenAccent.shade700,
+                        Colors.lightGreenAccent
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.add_shopping_cart, size: 16),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () => onAddToCart(item),
+                    label: const Text(
+                      'Adicionar',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
                 ),
               ],
             ),

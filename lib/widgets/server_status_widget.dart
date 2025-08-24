@@ -1,22 +1,51 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ServerStatusWidget extends StatelessWidget {
-  final bool online;
-  final int players;
+class ServerStatusWidget extends StatefulWidget {
+  const ServerStatusWidget({super.key});
 
-  const ServerStatusWidget({
-    super.key,
-    required this.online,
-    this.players = 0,
-  });
+  @override
+  State<ServerStatusWidget> createState() => _ServerStatusWidgetState();
+}
+
+class _ServerStatusWidgetState extends State<ServerStatusWidget> {
+  bool _online = false;
+  int _players = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkServerStatus();
+  }
+
+  Future<void> _checkServerStatus() async {
+    try {
+      // Conecta no IP local e porta do servidor Minecraft (TCP)
+      final socket = await Socket.connect('127.0.0.1', 25565,
+          timeout: Duration(seconds: 2));
+      socket.destroy();
+
+      // Se conectou, considera online
+      setState(() {
+        _online = true;
+        _players =
+            0; // Aqui você pode usar um método real para pegar os jogadores se quiser
+      });
+    } catch (e) {
+      setState(() {
+        _online = false;
+        _players = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final color =
-        online ? Colors.green.withOpacity(0.7) : Colors.red.withOpacity(0.7);
-    final text = online
-        ? ' $players jogadores Online nesse momento :)'
+        _online ? Colors.green.withOpacity(0.7) : Colors.red.withOpacity(0.7);
+    final text = _online
+        ? ' $_players jogadores Online nesse momento :)'
         : 'Servidor está offline';
 
     return Row(
@@ -35,7 +64,7 @@ class ServerStatusWidget extends StatelessWidget {
           text,
           style: GoogleFonts.pressStart2p(
             textStyle: TextStyle(
-              color: online ? Colors.greenAccent : Colors.redAccent,
+              color: _online ? Colors.greenAccent : Colors.redAccent,
               fontSize: 10,
               letterSpacing: -0.5,
             ),

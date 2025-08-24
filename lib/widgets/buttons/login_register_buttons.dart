@@ -28,7 +28,10 @@ class LoginRegisterButtons extends StatelessWidget {
                 child: PlayerHead(username: username),
               ),
               const SizedBox(width: 16),
-              Text(username),
+              Text(
+                username,
+                style: TextStyle(color: Colors.white),
+              ),
               const SizedBox(width: 16),
               AnimatedButton(
                 label: 'Deslogar',

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_state.dart';
-import 'package:pixelmonworldsweb/widgets/landing_page_footer.dart';
-import 'package:pixelmonworldsweb/widgets/landing_page_nav_bar.dart';
 import 'landing_page.dart';
 import 'package:pixelmonworldsweb/blocs/authbloc/auth_bloc.dart';
 
@@ -16,7 +14,7 @@ class LandingScreen extends StatelessWidget {
         data: ScrollbarThemeData(
           thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
             if (states.contains(MaterialState.hovered)) {
-              return Colors.redAccent;
+              return Colors.blue;
             }
             return Colors.red;
           }),

@@ -28,6 +28,9 @@ class _SectionContainerState extends State<SectionContainer> {
     final iconColor = _hovering ? Colors.red : Colors.white;
     final titleColor = _hovering ? Colors.red : Colors.white;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return InkWell(
       onTap: widget.onTap,
       child: MouseRegion(
@@ -36,9 +39,14 @@ class _SectionContainerState extends State<SectionContainer> {
         cursor: SystemMouseCursors.click,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          width: 480,
-          constraints: const BoxConstraints(minHeight: 280),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          width: isMobile ? double.infinity : 480,
+          constraints: BoxConstraints(
+            minHeight: isMobile ? 140 : 280, // reduzido para mobile
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 12 : 16,
+            vertical: isMobile ? 16 : 24,
+          ),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.15),
             borderRadius: BorderRadius.circular(12),
@@ -48,17 +56,21 @@ class _SectionContainerState extends State<SectionContainer> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (widget.icon != null) ...[
-                Icon(widget.icon, size: 48, color: iconColor),
-                const SizedBox(height: 16),
+                Icon(
+                  widget.icon,
+                  size: isMobile ? 30 : 48, // menor no mobile
+                  color: iconColor,
+                ),
+                SizedBox(height: isMobile ? 8 : 16), // menor espaçamento
               ],
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: GoogleFonts.pressStart2p(
                   textStyle: TextStyle(
                     color: titleColor,
-                    fontSize: 14,
+                    fontSize: isMobile ? 11 : 14,
                     letterSpacing: -1,
-                    height: 1.2,
+                    height: 1.1,
                   ),
                 ),
                 child: Text(
@@ -66,20 +78,23 @@ class _SectionContainerState extends State<SectionContainer> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                widget.content,
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
+              SizedBox(height: isMobile ? 8 : 16), // menor espaçamento
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
                 style: GoogleFonts.pressStart2p(
-                  textStyle: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 10,
-                    letterSpacing: -0.5,
-                    height: 1.4,
+                  textStyle: TextStyle(
+                    color: titleColor,
+                    fontSize: isMobile ? 8 : 14,
+                    letterSpacing: -1,
+                    height: 1.1,
                   ),
                 ),
-                textAlign: TextAlign.center,
+                child: Text(
+                  widget.content,
+                  maxLines: isMobile ? 3 : 5, // menos linhas no mobile
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pixelmonworldsweb/widgets/buttons/cart_button.dart';
 import 'package:pixelmonworldsweb/widgets/buttons/login_register_buttons.dart';
 import 'nav_item.dart';
 
@@ -23,8 +24,8 @@ class LandingPageNavBar extends StatelessWidget {
         NavItem(
           label: 'Dashboard',
           icon: Icons.dashboard,
-          selected: currentRoute == '/',
-          ontap: () => context.go('/'),
+          selected: currentRoute == '/dashboard',
+          ontap: () => context.go('/dashboard'),
         ),
         const SizedBox(width: 12),
         NavItem(
@@ -63,6 +64,8 @@ class LandingPageNavBar extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         const Spacer(),
+        CartButton(),
+        const SizedBox(width: 12),
         LoginRegisterButtons(),
       ],
     );

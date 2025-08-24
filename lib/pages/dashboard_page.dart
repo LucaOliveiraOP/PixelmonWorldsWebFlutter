@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pixelmonworldsweb/widgets/pokemon_card.dart';
 import 'package:pixelmonworldsweb/data/market_data.dart' as market;
 
-class DashboardContent extends StatefulWidget {
+class DashBoardPage extends StatefulWidget {
   final Map<String, dynamic> playerData;
 
-  const DashboardContent({super.key, required this.playerData});
+  const DashBoardPage({super.key, required this.playerData});
 
   @override
-  State<DashboardContent> createState() => _DashboardContentState();
+  State<DashBoardPage> createState() => _DashBoardPageState();
 }
 
-class _DashboardContentState extends State<DashboardContent> {
+class _DashBoardPageState extends State<DashBoardPage> {
   late List<Map<String, dynamic>> party;
 
   @override
@@ -46,8 +46,11 @@ class _DashboardContentState extends State<DashboardContent> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: EdgeInsets.all(isMobile ? 16 : 32),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,8 +74,8 @@ class _DashboardContentState extends State<DashboardContent> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: party.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isMobile ? 2 : 6,
                 childAspectRatio: 0.8,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
@@ -119,12 +122,15 @@ class _DashboardContentState extends State<DashboardContent> {
               builder: (context, candidateData, rejectedData) {
                 return Container(
                   decoration: BoxDecoration(
-                    border: candidateData.isNotEmpty
-                        ? Border.all(color: Colors.green, width: 4)
-                        : Border.all(color: Colors.white24, width: 2),
+                    border: Border.all(
+                      color: candidateData.isNotEmpty
+                          ? Colors.green
+                          : Colors.white24,
+                      width: candidateData.isNotEmpty ? 4 : 2,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  height: 400,
+                  height: isMobile ? 300 : 400,
                   child: market.marketPokemons.isEmpty
                       ? const Center(
                           child: Text(
@@ -137,8 +143,8 @@ class _DashboardContentState extends State<DashboardContent> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: market.marketPokemons.length,
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 6,
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: isMobile ? 2 : 6,
                             childAspectRatio: 0.8,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,

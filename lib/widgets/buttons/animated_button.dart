@@ -22,9 +22,25 @@ class _AnimatedButtonState extends State<AnimatedButton> {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = widget.filled ? Colors.red : Colors.transparent;
-    final borderColor = Colors.white;
-    final hoverColor = widget.filled ? Colors.red[900]! : Colors.white10;
+    final isFilled = widget.filled;
+
+    final backgroundDecoration = isFilled
+        ? BoxDecoration(
+            gradient: LinearGradient(
+              colors: _hovering
+                  ? [Color(0xFFFBC570), Color(0xFFBA0F0A)]
+                  : [Color(0xFFBA0F0A), Color(0xFFFBC570)],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white),
+          )
+        : BoxDecoration(
+            color: _hovering ? Colors.white10 : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white),
+          );
+
+    final textColor = isFilled ? Colors.white : Colors.white;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
@@ -33,17 +49,13 @@ class _AnimatedButtonState extends State<AnimatedButton> {
         onTap: widget.onPressed,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            color: _hovering ? hoverColor : bgColor,
-            border: Border.all(color: borderColor),
-            borderRadius: BorderRadius.circular(12),
-          ),
+          decoration: backgroundDecoration,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Text(
             widget.label,
             style: GoogleFonts.pressStart2p(
-              textStyle: const TextStyle(
-                color: Colors.white,
+              textStyle: TextStyle(
+                color: textColor,
                 fontSize: 10,
                 letterSpacing: -0.5,
               ),
